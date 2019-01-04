@@ -1,6 +1,5 @@
 import pwn
-import string
-import codecs
+
 text = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
 
 key = "ICE"

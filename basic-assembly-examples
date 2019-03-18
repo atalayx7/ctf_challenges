@@ -1,3 +1,13 @@
+Structure of an Assembly 
+
+.data 			; all initialized data
+.bss  			; all uninitialized data
+.text 			; program instructions
+_start: 		; Main() routine
+.globl _start 	; externally callable routines
+
+@
+
 staction .text
 _start:	
 	mov ecx, 99  ; set ecx to 99
@@ -93,13 +103,13 @@ _start:
 	mov [esp+1], byte 'e'
 	mov [esp+2], byte 'y'
 	mov [esp+3], byte '!'
-	mov eax, 4		;sys_write system call
-	mov ebx, 1		;stdout file descriptor
-	mov ecx, esp 	;pointer to bytes to write
-	mov edx, 4 		;number of bytes to write
-	int 0x80 		;perform system call
-	mov eax, 1 		;sys_exit system call
-	mov ebx, 0 		;exit status is 0
+	mov eax, 4		; sys_write system call
+	mov ebx, 1		; stdout file descriptor
+	mov ecx, esp 	; pointer to bytes to write
+	mov edx, 4 		; number of bytes to write
+	int 0x80 		; perform system call
+	mov eax, 1 		; sys_exit system call
+	mov ebx, 0 		; exit status is 0
 	int 0x80
 	
 >>Hey!
@@ -143,13 +153,71 @@ func:
 	sub esp, 2
 	mov[esp], byte 'H'
 	mov[esp+1], byte 'i'
-	mov eax, 4 		;sys_write system call
-	mov ebx, 1 		;stdout file descriptor
-	mov ecx, esp 	;bytes to write
-	mov edx, 2 		;number of bytes to write
-	int 0x80		;perform system call
+	mov eax, 4 		; sys_write system call
+	mov ebx, 1 		; stdout file descriptor
+	mov ecx, esp 	; bytes to write
+	mov edx, 2 		; number of bytes to write
+	int 0x80		; perform system call
 	mov esp, ebp
 	pop ebp
 	ret
 
 >>Hi
+
+@
+
+mov ebx, 123 ; ebx = 123
+mov eax, ebx ; eax = ebx
+add ebx, ecx ; ebx +=ecx
+sub ebx, edx ; ebx-=edx
+mul ebx 	 ; eax*=ebx
+div edx 	 ; eax /=ebx
+
+@
+
+		EAX 
+------------------- 32 bit
+			AX
+		----------- 16 bit
+		
+		  AH   AL
+		----- ----- 8 bit
+		
+		
+		EBX 
+------------------- 32 bit
+			BX
+		----------- 16 bit
+		
+		  BH   BL
+		----- ----- 8 bit
+
+@
+
+Arguments to syscalls:
+
+EAX -System call number
+EBX -First argument
+ECX -Second argument
+EDX -Third argument
+ESI	-Fourth argument
+EDI	-Fifth argument
+
+@
+
+
+EDI is used for writing
+ESI is used for reading
+EBX is used for extra storage
+ESP register points to the very top of the stack and so it will point to the return address.
+
+@
+
+je 	A, B ; Jump if Equal
+jne A, B ; Jump if not Equal
+jg 	A, B ; Jump if Greater
+jge	A, B ; Jump Greater or Equal
+jl  A, B ; Jump if Less
+jle A, B ; Jump if Less or Equal
+
+@

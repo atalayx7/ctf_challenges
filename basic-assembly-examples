@@ -1,0 +1,155 @@
+staction .text
+_start:	
+	mov ecx, 99  ; set ecx to 99
+	mov ebx, 42  ; exit status is 42
+	mov eax, 1   ; sys_exit system call
+	cmp ecx, 100 ; compare ecx to 100
+	jl skip      ; jump if less than
+	mov ebx, 13  ; exit status is 13
+
+skip:
+	int 0x80
+	
+>>42
+
+@
+
+staction .text
+_start:	
+	mov ecx, 101 ; set ecx to 101
+	mov ebx, 42  ; exit status is 42
+	mov eax, 1   ; sys_exit system call
+	cmp ecx, 100 ; compare ecx to 100
+	jl skip      ; jump if less than
+	mov ebx, 13  ; exit status is 13
+
+skip:
+	int 0x80
+	
+>>13
+
+@
+
+global _start
+section .text
+_start:
+	mov ebx, 1 	 ; start ebx at 1
+	mov ecx, 4 	 ; number of iterations
+label:
+	add ebx, ebx ; ebx+=ebx
+	dec ecx 	 ; ecx -=1
+	cmp ecx, 0 	 ; compare ecx with 0
+	jg label	 ; jump to label if greater
+	mov eax, 1	 ; sys_exit syscam call
+	int 0x80
+
+>>16
+
+@
+
+global _start
+section .data
+	addr db "yellow"
+section .text
+_start:
+	mov eax, 4		; sys_write system call
+	mov ebx, 1 		; stdout file descriptor
+	mov ecx, addr 	; bytes to write
+	mov edx, 6 		; number of bytes to write
+	int 0x80		; perform system call
+	mov eax, 1 		; sys_exit system call
+	mov ebx, 0 		; exit status is 0
+	int 0x80
+
+>>yellow
+
+@
+
+global _start
+section .data
+	addr db "yellow"
+section .text
+_start:
+	mov [addr], byte 'H'
+	mov [addr+5], byte '!'
+	mov eax, 4		; sys_write system call
+	mov ebx, 1 		; stdout file descriptor
+	mov ecx, addr 	; bytes to write
+	mov edx, 6 		; number of bytes to write
+	int 0x80		; perform system call
+	mov eax, 1 		; sys_exit system call
+	mov ebx, 0 		; exit status is 0
+	int 0x80
+
+>>Hello!
+
+@
+
+global _start
+
+_start:
+	sub esp, 4
+	mov [esp], byte 'H'
+	mov [esp+1], byte 'e'
+	mov [esp+2], byte 'y'
+	mov [esp+3], byte '!'
+	mov eax, 4		;sys_write system call
+	mov ebx, 1		;stdout file descriptor
+	mov ecx, esp 	;pointer to bytes to write
+	mov edx, 4 		;number of bytes to write
+	int 0x80 		;perform system call
+	mov eax, 1 		;sys_exit system call
+	mov ebx, 0 		;exit status is 0
+	int 0x80
+	
+>>Hey!
+
+@
+
+global _start
+
+_start:
+	call func
+	mov eax, 1
+	int 0x80
+	
+func:
+	mov ebx, 42
+	pop eax
+	jmp eax
+	
+>>42
+
+@
+
+global _start
+
+_start:
+	call func
+	mov eax, 1
+	int 0x80
+	
+func:
+	mov ebx, 42
+	ret
+
+>>42
+
+@
+
+func:
+	push ebp
+	mov ebp, esp
+	sub esp, 2
+	mov[esp], byte 'H'
+	mov[esp+1], byte 'i'
+	mov eax, 4 		;sys_write system call
+	mov ebx, 1 		;stdout file descriptor
+	mov ecx, esp 	;bytes to write
+	mov edx, 2 		;number of bytes to write
+	int 0x80		;perform system call
+	mov esp, ebp
+	pop ebp
+	ret
+
+>>Hi

